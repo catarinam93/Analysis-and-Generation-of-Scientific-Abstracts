@@ -25,7 +25,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            width: 900px;
             text-align: center;
         }
         .logo-container-left, .logo-container-right {
@@ -103,7 +103,7 @@
                 {% if resposta and request.endpoint == 'abstract_to_title' %}
                     <div class="resposta">
                         <strong>Suggested Title:</strong> {{ resposta }}
-                        <div style="color: grey;">Inserted Abstract: {texto}</div> 
+                        <div style="color: grey;">Inserted Abstract: {{texto}}</div> 
                     </div>
                 {% endif %}
             </form>
@@ -120,7 +120,7 @@
                 {% if resposta and request.endpoint == 'title_to_abstract' %}
                     <div class="resposta">
                         <strong>Suggested Abstract:</strong> {{ resposta }}
-                        <div style="color: grey;">Inserted Title:</div> 
+                        <div style="color: grey;">Inserted Title: {{texto}}</div> 
                     </div>
                 {% endif %}
             </form>
@@ -137,7 +137,7 @@
                 {% if resposta and request.endpoint == 'predict_category' %}
                     <div class="resposta">
                         <strong>Suggested Category:</strong> {{ resposta }}
-                        <div style="color: grey;">Inserted Title/Abstract:</div> 
+                        <div style="color: grey;">Inserted Title/Abstract: {{texto}}</div> 
                     </div>
                 {% endif %}
             </form>
@@ -147,14 +147,14 @@
         <button class="form-btn" onclick="mostrarFormulario('form4')">Translate to Portuguese</button>
         <div id="form4" class="hidden-form">
             <form method="POST" action="/translate_portuguese" class="form-container">
-                <label for="texto4">Give your abstract or title and you will receive a suggested trasnlation to Portuguese</label>
+                <label for="texto4">Give your abstract or title and you will receive a suggested translation to Portuguese</label>
                 <input type="text" id="texto4" name="texto" required>
                 <button type="submit"><i class="fas fa-paper-plane"></i> Generate</button>
 
                 {% if resposta and request.endpoint == 'translate_portuguese' %}
                     <div class="resposta">
                         <strong>Suggested Translation to Portuguese:</strong> {{ resposta }}
-                        <div style="color: grey;">Inserted Title/Abstract:</div> 
+                        <div style="color: grey;">Inserted Title/Abstract: {{texto}}</div> 
                     </div>
                 {% endif %}
             </form>
@@ -171,7 +171,7 @@
                 {% if resposta and request.endpoint == 'enlarge_abstract' %}
                     <div class="resposta">
                         <strong>Suggested Enlarge Abstract:</strong> {{ resposta }}
-                        <div style="color: grey;">Inserted Abstract:</div> 
+                        <div style="color: grey;">Inserted Abstract: {{texto}}</div> 
                     </div>
                 {% endif %}
             </form>
@@ -199,11 +199,11 @@
                 document.getElementById('form1').style.display = 'block';
             {% elif resposta and request.endpoint == 'title_to_abstract' %}
                 document.getElementById('form2').style.display = 'block';
-            {% elif resposta and request.endpoint == 'abstract_to_keywords' %}
+            {% elif resposta and request.endpoint == 'predict_category' %}
                 document.getElementById('form3').style.display = 'block';
-            {% elif resposta and request.endpoint == 'title_to_citation' %}
+            {% elif resposta and request.endpoint == 'translate_portuguese' %}
                 document.getElementById('form4').style.display = 'block';
-            {% elif resposta and request.endpoint == 'title_to_reference' %}
+            {% elif resposta and request.endpoint == 'enlarge_abstract' %}
                 document.getElementById('form5').style.display = 'block';
             {% endif %}
         }

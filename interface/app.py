@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 #Start Models
 #Abs to title - Callidior/bert2bert-base-arxiv-titlegen
+
 tokenizer_callidior = AutoTokenizer.from_pretrained("Callidior/bert2bert-base-arxiv-titlegen")
 model_callidior = AutoModelForSeq2SeqLM.from_pretrained("Callidior/bert2bert-base-arxiv-titlegen")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -205,8 +206,8 @@ def abstract_to_title():
     inputs = tokenizer_callidior(f"""Generate Title: {texto}""", return_tensors="pt").to(device)
     outputs = model_callidior.generate(**inputs)
     title = tokenizer_callidior.batch_decode(outputs, skip_special_tokens=True)
-    resposta = f"{title[0]}" #Adicionar answer e ligaçao llm
-    return render_template('index.html', resposta=resposta)
+    resposta = f"{title[0]}"
+    return render_template('index.html', resposta=resposta, texto = texto)
 
 @app.route('/title_to_abstract', methods=['POST'])
 def title_to_abstract():
@@ -219,8 +220,8 @@ def title_to_abstract():
         messages,
         max_new_tokens=300,
     )
-    resposta = f"{outputs[0]["generated_text"][-1]['content']}"
-    return render_template('index.html', resposta=resposta)
+    resposta = outputs[0]["generated_text"][-1]['content']
+    return render_template('index.html', resposta=resposta, texto = texto)
 
 @app.route('/predict_category', methods=['POST'])
 def predict_category():
@@ -228,12 +229,12 @@ def predict_category():
     candidate_labels = list(categorias_hier.values())
     label = classifier_bart(texto, candidate_labels, multi_label=True)['labels']
     label = label[:5]
-    l = []
+    l = ''
     for i in label:
-        s = i + ': ' + label[i]
-        l.append(s)
+        s = i + ': ' + label[i] + '\n'
+        l += (s)
     resposta = f"{l}"
-    return render_template('index.html', resposta=resposta)
+    return render_template('index.html', resposta=resposta, texto = texto)
 
 @app.route('/translate_portuguese', methods=['POST'])
 def translate_portuguese():
@@ -256,8 +257,8 @@ def enlarge_abstract():
         messages,
         max_new_tokens = 300,
     )
-    resposta = f"{outputs[0]["generated_text"][-1]['content']}"
-    return render_template('index.html', resposta=resposta)
+    resposta = outputs[0]["generated_text"][-1]['content']
+    return render_template('index.html', resposta=resposta, texto = texto)
 
 if __name__ == '__main__':
     app.run(debug=True)
