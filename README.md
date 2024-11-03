@@ -78,3 +78,4 @@ An index html file is stored here.
 
 Run the file `app.py` on you cmd, there a hyperlink will appear in which you should make ctrl+Enter to access it. Then the interface will appear on your browser and you can you use as many times as you want!
 
+![Interface](interface.png)
