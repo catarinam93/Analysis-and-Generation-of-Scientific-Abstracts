@@ -1,3 +1,12 @@
+################################################################
+#Advanced Topics in Machine Learning - Group P1_C
+
+#Produced by:
+#- Catarina Monteiro up202105279
+#- Diogo Mendes up202108102
+#- Gonçalo Brochado up202106090
+#################################################################
+
 from flask import Flask, render_template, request
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline, MarianMTModel, MarianTokenizer
 import torch
