@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 #Start Models
 #Abs to title - Callidior/bert2bert-base-arxiv-titlegen
-
+'''
 tokenizer_callidior = AutoTokenizer.from_pretrained("Callidior/bert2bert-base-arxiv-titlegen")
 model_callidior = AutoModelForSeq2SeqLM.from_pretrained("Callidior/bert2bert-base-arxiv-titlegen")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -32,7 +32,7 @@ model_opus = "Helsinki-NLP/opus-mt-tc-big-en-pt"
 tokenizer_opus = MarianTokenizer.from_pretrained(model_opus)
 model_opus = MarianMTModel.from_pretrained(model_opus)
 model_opus.to(device)
-
+'''
 #End Models
 
 #criado com base nos dados do Arxiv
@@ -231,7 +231,7 @@ def predict_category():
     label = label[:5]
     l = ''
     for i in label:
-        s = i + ': ' + label[i] + '\n'
+        s = i + ': ' + i + '\n'
         l += (s)
     resposta = f"{l}"
     return render_template('index.html', resposta=resposta, texto = texto)
@@ -240,11 +240,17 @@ def predict_category():
 def translate_portuguese():
     texto = request.form.get('texto')
     src_text = f">>por<< {texto}"
-    inputs = tokenizer_opus(src_text, return_tensors="pt", padding=True).to(device)
-    translated = model_opus.generate(**inputs)
-    r = tokenizer_opus.decode(translated[0], skip_special_tokens=True)
-    resposta = f"{r}"
-    return render_template('index.html', resposta=resposta)
+    fragmented_text = [">>por<< " + sentence for sentence in src_text.split(". ")]
+    translated_text = ''
+    for sentence in fragmented_text:
+        inputs = tokenizer_opus(sentence, return_tensors="pt", padding=True, truncation=True).to(device)
+        translated = model_opus.generate(**inputs, max_length=300)
+        translated_text += tokenizer_opus.decode(translated[0], skip_special_tokens=True)
+    #inputs = tokenizer_opus(src_text, return_tensors="pt", padding=True).to(device)
+    #translated = model_opus.generate(**inputs)
+    #r = tokenizer_opus.decode(translated[0], skip_special_tokens=True)
+    resposta = f"{translated_text}"
+    return render_template('index.html', resposta=resposta, texto = texto)
 
 @app.route('/enlarge_abstract', methods=['POST'])
 def enlarge_abstract():
